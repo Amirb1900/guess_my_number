@@ -65,6 +65,7 @@ TOKEN = os.environ['TOKEN']  # توکن رو از Environment Variable می‌خ
 app = Application.builder().token(TOKEN).build()
 
 
-    print("ربات اجرا شد ✅")
+print("ربات اجرا شد ✅")
 
-    app.run_polling()
+app.run_polling()
+
