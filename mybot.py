@@ -58,12 +58,13 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_data[user_id] = {"number": secret_number, "attempts": 0}
         await update.message.reply_text("بازی جدید شروع شد! دوباره حدس بزن 😎")
 
-# اجرای ربات
-if __name__ == "__main__":
-    app = Application.builder().token("8242950967:AAHUktySTMt0b0e3aOu53clwhXBjqxpy1UE").build()
+import os
+from telegram.ext import Application
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, guess))
+TOKEN = os.environ['TOKEN']  # توکن رو از Environment Variable می‌خونه
+app = Application.builder().token(TOKEN).build()
+
 
     print("ربات اجرا شد ✅")
+
     app.run_polling()
