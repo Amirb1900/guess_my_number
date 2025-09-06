@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Sep  6 13:02:03 2025
-
-@author: AmirHossein
-"""
-
+import os
 import logging
 import random
 from telegram import Update
@@ -36,7 +31,7 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        guess = int(update.message.text)
+        guess_num = int(update.message.text)
     except ValueError:
         await update.message.reply_text("لطفاً فقط عدد بفرست 🔢")
         return
@@ -44,9 +39,9 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     secret_number = user_data[user_id]["number"]
     user_data[user_id]["attempts"] += 1
 
-    if guess < secret_number:
+    if guess_num < secret_number:
         await update.message.reply_text("عدد من بزرگ‌تره ⬆️")
-    elif guess > secret_number:
+    elif guess_num > secret_number:
         await update.message.reply_text("عدد من کوچیک‌تره ⬇️")
     else:
         attempts = user_data[user_id]["attempts"]
@@ -58,14 +53,11 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_data[user_id] = {"number": secret_number, "attempts": 0}
         await update.message.reply_text("بازی جدید شروع شد! دوباره حدس بزن 😎")
 
-import os
-from telegram.ext import Application
-
-TOKEN = os.environ['TOKEN']  # توکن رو از Environment Variable می‌خونه
+# اجرای ربات
+TOKEN = os.environ['TOKEN']
 app = Application.builder().token(TOKEN).build()
-
+app.add_handler(CommandHandler("start", start))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, guess))
 
 print("ربات اجرا شد ✅")
-
 app.run_polling()
-
